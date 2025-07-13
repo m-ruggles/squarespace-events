@@ -1,2 +1,3 @@
-# squarespace-events
-pulls PCO events data for discovery-church.org
+# disco-connect
+# disco-connect
+# disco-connect
