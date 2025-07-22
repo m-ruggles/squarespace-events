@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upcoming Events</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>Upcoming Events</h1>
+    <div id="events-container" class="events"></div>
+  </main>
+
+  <script>
+    async function loadEvents() {
+      try {
+        const res = await fetch('/.netlify/functions/getEvents');
+        if (!res.ok) throw new Error('Network response was not ok');
+        const events = await res.json();
+
+        const container = document.getElementById('events-container');
+        container.innerHTML = '';
+
+        events.forEach(event => {
+          const { name, description, public_url, logo_url } = event.attributes;
+
+          const card = document.createElement('div');
+          card.className = 'event-card';
+
+          card.innerHTML = `
+            <img src="${logo_url}" alt="${name}" />
+            <h2>${name}</h2>
+            <p>${description.replace(/<\/?[^>]+(>|$)/g, '')}</p>
+            <a href="${public_url}" target="_blank">Register</a>
+          `;
+
+          container.appendChild(card);
+        });
+      } catch (error) {
+        document.getElementById('events-container').innerHTML = '<p>Error loading events.</p>';
+        console.error(error);
+      }
+    }
+
+    loadEvents();
+  </script>
+</body>
+</html>
